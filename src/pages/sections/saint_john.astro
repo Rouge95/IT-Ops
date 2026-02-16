@@ -1,0 +1,183 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const pageTitle =
+  '"Saint John": what is writing to this log file?"';
+const unit = '"Saint-John"';
+---
+
+<BaseLayout
+  title={pageTitle}
+  unit={unit}
+>
+  <h1 class="text-3xl font-bold mb-4">
+    {pageTitle}
+  </h1>
+  <hr class="mb-6" />
+
+  <!-- Scenario Explanation -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Scenario: Understanding the
+      Problem
+    </summary>
+    <p>
+      A developer’s program is
+      continuously writing to
+      <code>/var/log/bad.log</code>,
+      filling up disk space. Your task:
+      identify and stop this process. Do <strong
+        >not</strong
+      > delete the log file.
+    </p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        Check live output: <code
+          >tail -f /var/log/bad.log</code
+        >
+      </li>
+      <li>
+        Goal: terminate the program so
+        the file stops growing
+      </li>
+      <li>
+        Root privileges are available,
+        so use <code>sudo</code> if needed
+      </li>
+    </ul>
+  </details>
+
+  <!-- Step 1: Identify the process -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 1: Find the culprit process
+    </summary>
+    <p>
+      Use Linux tools to see which
+      process is writing to the log:
+    </p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        <strong>lsof:</strong> Lists open
+        files by process
+        <pre
+          class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sudo lsof /var/log/bad.log</code></pre>
+      </li>
+      <li>
+        <strong>fuser:</strong> Shows PIDs
+        using a file
+        <pre
+          class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sudo fuser /var/log/bad.log</code></pre>
+      </li>
+      <li>
+        <strong>ps + grep:</strong> If you
+        know the name of the program
+        <pre
+          class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>ps aux | grep bad.log</code></pre>
+      </li>
+    </ul>
+    <p>
+      These commands will give you the
+      PID(s) of the process writing to
+      the file.
+    </p>
+  </details>
+
+  <!-- Step 2: Terminate the process -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 2: Kill the process
+    </summary>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        Once you have the PID (e.g.,
+        1234), stop the process:
+        <pre
+          class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sudo kill 1234</code></pre>
+      </li>
+      <li>
+        If the process ignores SIGTERM:
+        <pre
+          class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sudo kill -9 1234</code></pre>
+      </li>
+      <li>
+        Verify the process is gone: <code
+          >ps -p 1234</code
+        > (should return nothing)
+      </li>
+    </ul>
+  </details>
+
+  <!-- Step 3: Verify the log is no longer growing -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 3: Check the log file
+    </summary>
+    <p>
+      Ensure the log file stops growing
+      over time:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>watch -n 2 ls -lh /var/log/bad.log</code></pre>
+    <p>Or keep monitoring with tail:</p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>tail -f /var/log/bad.log</code></pre>
+    <p>
+      If no new lines appear after
+      killing the process, the challenge
+      is complete.
+    </p>
+  </details>
+
+  <!-- Optional: Bonus tips -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Bonus Tips
+    </summary>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        Use <code>htop</code> or <code
+          >top</code
+        > for a live view of processes.
+      </li>
+      <li>
+        Check if a cron job is
+        recreating the process: <code
+          >crontab -l</code
+        >
+      </li>
+      <li>
+        Use <code>systemctl status</code
+        > if it’s running as a service.
+      </li>
+    </ul>
+  </details>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+// Page frontmatter
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const pageTitle = "Rouge95's Notes";
+const base = Astro.base; // get the base URL
+---
+
+<BaseLayout title={pageTitle}>
+  <main class="max-w-4xl mx-auto p-6">
+    <!-- About Section -->
+    <div class="content mb-6">
+      <h2
+        class="text-2xl font-semibold mb-2"
+      >
+        About This Page
+      </h2>
+      <p class="mb-4">
+        Mastering Linux & DevOps
+        troubleshooting on live servers.
+        Fun, real-world challenges for
+        engineers.
+      </p>
+      <hr />
+    </div>
+
+    <!-- Sections Navigation -->
+    <nav class="section-list">
+      <ul
+        class="list-disc list-inside space-y-1"
+      >
+        <li>
+          <a
+            href="https://rouge95.github.io/it-ops/"
+            class="text-blue-600 hover:underline"
+          >
+            "Saint John": what is
+            writing to this log file? //
+            bash // python
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </main></BaseLayout
+>
