@@ -1,0 +1,204 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const pageTitle =
+  '"Saskatoon": counting IPs';
+const unit = '"Saskatoon"';
+---
+
+<BaseLayout
+  title={pageTitle}
+  unit={unit}
+>
+  <h1 class="text-3xl font-bold mb-4">
+    {pageTitle}
+  </h1>
+  <hr class="mb-6" />
+
+  <!-- Scenario Explanation -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Scenario: Understanding the Problem
+    </summary>
+    <p>
+      A web server access log exists at
+      <code>/home/admin/access.log</code>.
+      Each line represents one HTTP request,
+      and the first column contains the
+      client IP address.
+    </p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        Find the IP address with the
+        highest number of requests
+      </li>
+      <li>
+        There is no tie — one unique IP
+        appears most frequently
+      </li>
+      <li>
+        Write the answer to
+        <code>/home/admin/highestip.txt</code>
+      </li>
+      <li>
+        Root access is available if needed
+      </li>
+    </ul>
+  </details>
+
+  <!-- Step 1: Extract IP column -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 1: Extract the IP addresses
+    </summary>
+    <p>
+      The IP is the first column. Extract it:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log</code></pre>
+    <p>
+      This outputs only the requester IPs,
+      one per line.
+    </p>
+  </details>
+
+  <!-- Step 2: Count occurrences -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 2: Count and sort by frequency
+    </summary>
+    <p>
+      To find the most common IP:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort -nr | head -1</code></pre>
+    <p>
+      Breakdown:
+    </p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li><code>sort</code> groups identical IPs</li>
+      <li><code>uniq -c</code> counts them</li>
+      <li><code>sort -nr</code> sorts numerically, highest first</li>
+      <li><code>head -1</code> selects the top result</li>
+    </ul>
+  </details>
+
+  <!-- Step 3: Extract only the IP -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 3: Isolate the IP address
+    </summary>
+    <p>
+      The previous command prints count and IP.
+      Extract only the IP column:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort -nr | head -1 | awk '{print $2}'</code></pre>
+  </details>
+
+  <!-- Step 4: Write solution to file -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 4: Write the answer to file
+    </summary>
+    <p>
+      Redirect the final IP into the required file:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort -nr | head -1 | awk '{print $2}' > /home/admin/highestip.txt</code></pre>
+    <p>
+      Verify:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>cat /home/admin/highestip.txt</code></pre>
+  </details>
+
+  <!-- Step 5: Validate -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 5: Verify correctness
+    </summary>
+    <p>
+      Confirm occurrence count:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>grep -c -F -f /home/admin/highestip.txt /home/admin/access.log</code></pre>
+    <p>
+      Expected result: <strong>482</strong>
+    </p>
+    <p>
+      Optional checksum validation:
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sha1sum /home/admin/highestip.txt</code></pre>
+    <p>
+      Expected SHA1:
+      <code>6ef426c40652babc0d081d438b9f353709008e93</code>
+    </p>
+  </details>
+
+  <!-- Persistence Check -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Persistence Check
+    </summary>
+    <p>
+      No service or configuration changes
+      are made. This task is
+      <strong>non-persistent</strong>.
+    </p>
+  </details>
+
+  <!-- What You Must Remember -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      What You Must Remember
+    </summary>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li><code>awk '{print $1}'</code> extracts first column</li>
+      <li><code>sort | uniq -c</code> counts duplicates</li>
+      <li><code>sort -nr</code> sorts numerically descending</li>
+      <li>Always isolate the final required field before redirecting</li>
+      <li>Validate with <code>grep -c -F -f</code></li>
+    </ul>
+  </details>
+
+</BaseLayout>
