@@ -1,18 +1,17 @@
-// Page frontmatter import BaseLayout
-from "../layouts/BaseLayout.astro";
+---
+// Page frontmatter
+import BaseLayout from "../layouts/BaseLayout.astro";
+
 const pageTitle = "Rouge95's Notes";
-const base = Astro.base; // get the base
-URL
+const base = Astro.base; // get the base URL
+---
 
 <BaseLayout title={pageTitle}>
   <main class="max-w-4xl mx-auto p-6">
-    <!--
-About Section -->
-    <div class="content
-mb-6">
+    <!-- About Section -->
+    <div class="content mb-6">
       <h2
-        class="text-2xl font-semibold
-mb-2"
+        class="text-2xl font-semibold mb-2"
       >
         About This Page
       </h2>
@@ -24,8 +23,8 @@ mb-2"
       </p>
       <hr />
     </div>
-    <!-- Sections
-Navigation -->
+
+    <!-- Sections Navigation -->
     <nav class="section-list">
       <ul
         class="list-disc list-inside space-y-1"
@@ -39,15 +38,15 @@ Navigation -->
             writing to this log file? //
             bash // python
           </a>
-        </li>
-        <li>
-          <a
-            href="https://rouge95.github.io/IT-Ops/sections/saskatoon_counting_ips/"
-            class="text-blue-600 hover:underline"
-          >
-            "Saskatoon": counting IPs //
-            bash
-          </a>
+          <li>
+            <a
+              href="https://rouge95.github.io/IT-Ops/sections/saskatoon_counting_ips/"
+              class="text-blue-600 hover:underline"
+            >
+              "Saskatoon": Counting IPs
+              // bash
+            </a>
+          </li>
         </li>
       </ul>
     </nav>
