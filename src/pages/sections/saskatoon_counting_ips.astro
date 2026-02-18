@@ -22,14 +22,15 @@ const unit = '"Saskatoon"';
     <summary
       class="cursor-pointer font-semibold"
     >
-      Scenario: Understanding the Problem
+      Scenario: Understanding the
+      Problem
     </summary>
     <p>
       A web server access log exists at
-      <code>/home/admin/access.log</code>.
-      Each line represents one HTTP request,
-      and the first column contains the
-      client IP address.
+      <code>/home/admin/access.log</code
+      >. Each line represents one HTTP
+      request, and the first column
+      contains the client IP address.
     </p>
     <ul
       class="list-disc list-inside mt-2 space-y-1"
@@ -44,10 +45,13 @@ const unit = '"Saskatoon"';
       </li>
       <li>
         Write the answer to
-        <code>/home/admin/highestip.txt</code>
+        <code
+          >/home/admin/highestip.txt</code
+        >
       </li>
       <li>
-        Root access is available if needed
+        Root access is available if
+        needed
       </li>
     </ul>
   </details>
@@ -62,13 +66,14 @@ const unit = '"Saskatoon"';
       Step 1: Extract the IP addresses
     </summary>
     <p>
-      The IP is the first column. Extract it:
+      The IP is the first column.
+      Extract it:
     </p>
     <pre
-      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log</code></pre>
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '&#123;print $1&#125;' /home/admin/access.log</code></pre>
     <p>
-      This outputs only the requester IPs,
-      one per line.
+      This outputs only the requester
+      IPs, one per line.
     </p>
   </details>
 
@@ -79,23 +84,31 @@ const unit = '"Saskatoon"';
     <summary
       class="cursor-pointer font-semibold"
     >
-      Step 2: Count and sort by frequency
+      Step 2: Count and sort by
+      frequency
     </summary>
-    <p>
-      To find the most common IP:
-    </p>
+    <p>To find the most common IP:</p>
     <pre
-      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort -nr | head -1</code></pre>
-    <p>
-      Breakdown:
-    </p>
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '&#123;print $1&#125;' /home/admin/access.log | sort | uniq -c | sort -nr | head -1</code></pre>
+    <p>Breakdown:</p>
     <ul
       class="list-disc list-inside mt-2 space-y-1"
     >
-      <li><code>sort</code> groups identical IPs</li>
-      <li><code>uniq -c</code> counts them</li>
-      <li><code>sort -nr</code> sorts numerically, highest first</li>
-      <li><code>head -1</code> selects the top result</li>
+      <li>
+        <code>sort</code> groups identical
+        IPs
+      </li>
+      <li>
+        <code>uniq -c</code> counts them
+      </li>
+      <li>
+        <code>sort -nr</code> sorts numerically,
+        highest first
+      </li>
+      <li>
+        <code>head -1</code> selects the top
+        result
+      </li>
     </ul>
   </details>
 
@@ -109,11 +122,12 @@ const unit = '"Saskatoon"';
       Step 3: Isolate the IP address
     </summary>
     <p>
-      The previous command prints count and IP.
-      Extract only the IP column:
+      The previous command prints count
+      and IP. Extract only the IP
+      column:
     </p>
     <pre
-      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort -nr | head -1 | awk '{print $2}'</code></pre>
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '&#123;print $1&#125;' /home/admin/access.log | sort | uniq -c | sort -nr | head -1 | awk '&#123;print $2&#125;'</code></pre>
   </details>
 
   <!-- Step 4: Write solution to file -->
@@ -126,13 +140,12 @@ const unit = '"Saskatoon"';
       Step 4: Write the answer to file
     </summary>
     <p>
-      Redirect the final IP into the required file:
+      Redirect the final IP into the
+      required file:
     </p>
     <pre
-      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort -nr | head -1 | awk '{print $2}' > /home/admin/highestip.txt</code></pre>
-    <p>
-      Verify:
-    </p>
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>awk '&#123;print $1&#125;'/home/admin/access.log | sort | uniq -c | sort -nr | head -1 | awk '&#123;print $2&#125;' &gt; /home/admin/highestip.txt</code></pre>
+    <p>Verify:</p>
     <pre
       class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>cat /home/admin/highestip.txt</code></pre>
   </details>
@@ -146,22 +159,22 @@ const unit = '"Saskatoon"';
     >
       Step 5: Verify correctness
     </summary>
-    <p>
-      Confirm occurrence count:
-    </p>
+    <p>Confirm occurrence count:</p>
     <pre
       class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>grep -c -F -f /home/admin/highestip.txt /home/admin/access.log</code></pre>
     <p>
-      Expected result: <strong>482</strong>
+      Expected result: <strong
+        >482</strong
+      >
     </p>
-    <p>
-      Optional checksum validation:
-    </p>
+    <p>Optional checksum validation:</p>
     <pre
       class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sha1sum /home/admin/highestip.txt</code></pre>
     <p>
       Expected SHA1:
-      <code>6ef426c40652babc0d081d438b9f353709008e93</code>
+      <code
+        >6ef426c40652babc0d081d438b9f353709008e93</code
+      >
     </p>
   </details>
 
@@ -175,8 +188,8 @@ const unit = '"Saskatoon"';
       Persistence Check
     </summary>
     <p>
-      No service or configuration changes
-      are made. This task is
+      No service or configuration
+      changes are made. This task is
       <strong>non-persistent</strong>.
     </p>
   </details>
@@ -193,12 +206,29 @@ const unit = '"Saskatoon"';
     <ul
       class="list-disc list-inside mt-2 space-y-1"
     >
-      <li><code>awk '&#123;print $1&#125;'</code> extracts first column</li>
-      <li><code>sort | uniq -c</code> counts duplicates</li>
-      <li><code>sort -nr</code> sorts numerically descending</li>
-      <li>Always isolate the final required field before redirecting</li>
-      <li>Validate with <code>grep -c -F -f</code></li>
+      <li>
+        <code
+          >awk '&#123;print $1&#125;'</code
+        > extracts first column
+      </li>
+      <li>
+        <code>sort | uniq -c</code> counts
+        duplicates
+      </li>
+      <li>
+        <code>sort -nr</code> sorts numerically
+        descending
+      </li>
+      <li>
+        Always isolate the final
+        required field before
+        redirecting
+      </li>
+      <li>
+        Validate with <code
+          >grep -c -F -f</code
+        >
+      </li>
     </ul>
   </details>
-
 </BaseLayout>
