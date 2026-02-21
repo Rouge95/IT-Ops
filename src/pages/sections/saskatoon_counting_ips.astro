@@ -239,30 +239,69 @@ const unit = '"Saskatoon"';
     >
       Command Dictionary
     </summary>
-    <ul class="list-disc list-inside mt-2 space-y-1">
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
       <li>
-        <code>awk '{print $1}'</code> – Extracts the first column from each line of input; here, it gets the IP address from the log. No flags used.
+        <code
+          >awk '&#123;print $1&#125;'</code
+        > – Extracts the first column from
+        each line of input; here, it gets
+        the IP address from the log. No flags
+        used.
       </li>
       <li>
-        <code>sort</code> – Sorts lines alphabetically by default. No flags are needed here, but you could use <code>-n</code> for numeric sort or <code>-r</code> for reverse.
+        <code>sort</code> – Sorts lines alphabetically
+        by default. No flags are needed here,
+        but you could use <code>-n</code
+        > for numeric sort or <code
+          >-r</code
+        > for reverse.
       </li>
       <li>
-        <code>uniq -c</code> – Counts consecutive duplicate lines; <code>-c</code> prefixes each line with the occurrence count.
+        <code>uniq -c</code> – Counts consecutive
+        duplicate lines; <code>-c</code> prefixes
+        each line with the occurrence count.
       </li>
       <li>
-        <code>sort -nr</code> – Sorts numerically (<code>-n</code>) and in reverse (<code>-r</code>) order so the highest count appears first.
+        <code>sort -nr</code> – Sorts numerically
+        (<code>-n</code>) and in reverse
+        (<code>-r</code>) order so the
+        highest count appears first.
       </li>
       <li>
-        <code>head -1</code> – Displays only the first line; <code>-1</code> is the flag specifying how many lines to show.
+        <code>head -1</code> – Displays only
+        the first line; <code>-1</code> is
+        the flag specifying how many lines
+        to show.
       </li>
       <li>
-        <code>&gt; /home/admin/highestip.txt</code> – Redirects output into a file, overwriting it if it exists. No flags; the redirection operator is used.
+        <code
+          >&gt;
+          /home/admin/highestip.txt</code
+        > – Redirects output into a file,
+        overwriting it if it exists. No flags;
+        the redirection operator is used.
       </li>
       <li>
-        <code>grep -c -F -f /home/admin/highestip.txt /home/admin/access.log</code> – Counts matches (<code>-c</code>), treats patterns as fixed strings (<code>-F</code>), and reads patterns from a file (<code>-f</code>).
+        <code
+          >grep -c -F -f
+          /home/admin/highestip.txt
+          /home/admin/access.log</code
+        > – Counts matches (<code
+          >-c</code
+        >), treats patterns as fixed
+        strings (<code>-F</code>), and
+        reads patterns from a file (<code
+          >-f</code
+        >).
       </li>
       <li>
-        <code>sha1sum /home/admin/highestip.txt</code> – Generates SHA1 checksum of the file; no flags are needed.
+        <code
+          >sha1sum
+          /home/admin/highestip.txt</code
+        > – Generates SHA1 checksum of the
+        file; no flags are needed.
       </li>
     </ul>
   </details>
