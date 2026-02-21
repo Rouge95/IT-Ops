@@ -1,0 +1,375 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const pageTitle =
+  '"Taipei": Come a-knocking';
+const unit = '"Taipei"';
+---
+
+<BaseLayout
+  title={pageTitle}
+  unit={unit}
+>
+  <h1 class="text-3xl font-bold mb-4">
+    {pageTitle}
+  </h1>
+  <hr class="mb-6" />
+
+  <!-- Scenario Explanation -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Scenario: Understanding the
+      Problem
+    </summary>
+    <p>
+      A web server is running on <code
+        >localhost:80</code
+      >, but access is blocked by <strong
+        >Port Knocking</strong
+      >.
+    </p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        Only one knock is required (a
+        single SYN packet to one port)
+      </li>
+      <li>
+        No sequence — just one correct
+        TCP port
+      </li>
+      <li>
+        After knocking, <code
+          >curl localhost</code
+        > must work
+      </li>
+      <li>
+        Root access is <strong
+          >not</strong
+        > available
+      </li>
+    </ul>
+  </details>
+
+  <!-- Concept Section -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Core Concepts You Must Understand
+    </summary>
+
+    <h3 class="font-semibold mt-2">
+      1. What is Port Knocking?
+    </h3>
+    <p>
+      Port knocking is a firewall
+      technique where access to a
+      protected service (here: port 80)
+      is granted only after a specific
+      network packet is received.
+    </p>
+
+    <p class="mt-2">
+      Typically implemented with:
+    </p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        <code>iptables</code> + recent module
+      </li>
+      <li><code>knockd</code></li>
+      <li>Custom firewall logic</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4">
+      2. What is a SYN Packet?
+    </h3>
+    <p>
+      TCP connections begin with a <strong
+        >SYN</strong
+      > packet (first step of the 3‑way handshake).
+    </p>
+    <p class="mt-2">
+      The firewall listens for a SYN to
+      a specific port. If correct, it
+      temporarily allows access to port
+      80.
+    </p>
+
+    <h3 class="font-semibold mt-4">
+      3. Why Port 80 Looks Closed
+    </h3>
+    <p>
+      The firewall blocks incoming
+      traffic to port 80 until the knock
+      is received. After knocking, a
+      temporary rule allows access.
+    </p>
+  </details>
+
+  <!-- Step 1 -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 1: Confirm Port 80 is Blocked
+    </summary>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>curl localhost</code></pre>
+    <p>
+      This should fail or hang,
+      confirming the service is
+      protected.
+    </p>
+  </details>
+
+  <!-- Step 2 -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 2: Scan All Ports
+    </summary>
+    <p>
+      Since this is a single-port knock,
+      one unusual open port must exist.
+    </p>
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sudo nmap -p- -Pn localhost</code></pre>
+
+    <p class="mt-2">Look for:</p>
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        An uncommon high-numbered port
+      </li>
+      <li>Not 22, 80, 443</li>
+      <li>
+        Likely something unexpected
+      </li>
+    </ul>
+  </details>
+
+  <!-- Step 3 -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 3: Send the SYN Knock
+    </summary>
+
+    <p>
+      Suppose the open port found is <code
+        >12345</code
+      >. Send exactly one SYN:
+    </p>
+
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>sudo hping3 -S -p 12345 -c 1 localhost</code></pre>
+
+    <p class="mt-2">
+      This triggers the firewall rule
+      allowing port 80 temporarily.
+    </p>
+  </details>
+
+  <!-- Step 4 -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Step 4: Access the Web Server
+    </summary>
+
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>curl localhost</code></pre>
+
+    <p>Verify the md5:</p>
+
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>echo $(curl localhost) | md5sum</code></pre>
+
+    <p>
+      Expected output:
+      <code
+        >fe474f8e1c29e9f412ed3b726369ab65</code
+      >
+    </p>
+  </details>
+
+  <!-- Firewall Mechanism -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      What Happens Behind the Scenes
+    </summary>
+
+    <p>Likely firewall logic:</p>
+
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>Detect SYN to knock port</li>
+      <li>
+        Add source IP to allowed list
+      </li>
+      <li>
+        Permit TCP traffic to port 80
+      </li>
+      <li>
+        Timeout after short period
+      </li>
+    </ul>
+
+    <p class="mt-2">
+      This is often implemented with:
+    </p>
+
+    <pre
+      class="bg-gray-100 p-2 rounded overflow-x-auto text-sm"><code>iptables -A INPUT -p tcp --dport 80 -m recent --rcheck --name knock -j ACCEPT</code></pre>
+  </details>
+
+  <!-- Persistence -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Persistence Check
+    </summary>
+    <p>
+      No configuration changes are made.
+      This task is
+      <strong>non-persistent</strong>.
+    </p>
+  </details>
+
+  <!-- Key Takeaways -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      What You Must Remember
+    </summary>
+
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        Port knocking hides services
+        behind firewall rules
+      </li>
+      <li>
+        A SYN packet is enough to
+        trigger access
+      </li>
+      <li>
+        Scan all ports when behavior is
+        unusual
+      </li>
+      <li>
+        Act quickly before timeout
+        expires
+      </li>
+      <li>
+        Always validate using checksum
+        if provided
+      </li>
+    </ul>
+  </details>
+
+  <!-- Command Dictionary -->
+  <details
+    class="mb-4 border rounded p-4"
+  >
+    <summary
+      class="cursor-pointer font-semibold"
+    >
+      Command Dictionary
+    </summary>
+
+    <ul
+      class="list-disc list-inside mt-2 space-y-1"
+    >
+      <li>
+        <code
+          >nmap -p- -Pn localhost</code
+        > – Scans all 65535 TCP ports.
+        <br />
+        <code>-p-</code> = scan all ports
+        <br />
+        <code>-Pn</code> = skip host discovery
+        (assume host is up)
+      </li>
+
+      <li>
+        <code
+          >hping3 -S -p 12345 -c 1
+          localhost</code
+        > – Sends crafted TCP packet.
+        <br />
+        <code>-S</code> = set SYN flag
+        <br />
+        <code>-p</code> = destination port
+        <br />
+        <code>-c 1</code> = send exactly one
+        packet
+      </li>
+
+      <li>
+        <code>curl localhost</code> – Performs
+        HTTP request to local web server.
+      </li>
+
+      <li>
+        <code>md5sum</code> – Calculates MD5
+        checksum of input.
+      </li>
+
+      <li>
+        <code>echo $(command)</code> – Executes
+        command and passes output to echo
+        (includes newline).
+      </li>
+
+      <li>
+        <code>iptables</code> – Linux firewall
+        utility.
+        <br />
+        <code>-A</code> = append rule
+        <br />
+        <code>-p</code> = protocol
+        <br />
+        <code>--dport</code> = destination
+        port
+        <br />
+        <code>-m recent</code> = use recent
+        module
+      </li>
+    </ul>
+  </details>
+</BaseLayout>
